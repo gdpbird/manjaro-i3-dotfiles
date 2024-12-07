@@ -1,0 +1,6 @@
+if status is-interactive
+    # Commands to run in interactive sessions can go here
+end
+
+set --export FZF_DEFAULT_OPTS '--cycle --layout=reverse --height=40% --preview-window=border-sharp,border-horizontal,border-top --marker="*"'
+starship init fish | source

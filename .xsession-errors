@@ -1,0 +1,109 @@
+/bin/sh: line 1: ff-theme-util: command not found
+I2024-12-07 13:24:05.008732 instance.cpp:1384] Override Enabled Addons: {}
+I2024-12-07 13:24:05.008764 instance.cpp:1385] Override Disabled Addons: {}
+E2024-12-07 13:24:05.048070 waylandmodule.cpp:239] Failed to open wayland connection
+I2024-12-07 13:24:05.048099 addonmanager.cpp:205] Loaded addon wayland
+i3status: trying to auto-detect output_format setting
+i3status: auto-detected "i3bar"
+I2024-12-07 13:24:05.062669 xcbconnection.cpp:189] Connecting to X11 display, display name::0.
+I2024-12-07 13:24:05.063439 addonmanager.cpp:205] Loaded addon xcb
+I2024-12-07 13:24:05.082970 addonmanager.cpp:205] Loaded addon quickphrase
+conky: desktop window (0x324) is root window
+conky: window type - override
+conky: drawing to created window (0x1600002)
+conky: drawing to double buffer
+conky: forked to background, pid is 1337
+I2024-12-07 13:24:05.096841 addonmanager.cpp:205] Loaded addon clipboard
+I2024-12-07 13:24:05.099587 addonmanager.cpp:205] Loaded addon imselector
+
+conky: FOUND: console
+conky: FOUND: ncurses
+conky: FOUND: file
+conky: FOUND: x11
+conky: FOUND: wayland
+I2024-12-07 13:24:05.146677 addonmanager.cpp:205] Loaded addon keyboard
+conky: 'i3' x11 session running 'i3' desktop
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.148: Unable to locate theme engine in module_path: "adwaita",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.150: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.150: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.150: Unable to locate theme engine in module_path: "murrine",
+I2024-12-07 13:24:05.151853 addonmanager.cpp:205] Loaded addon waylandim
+I2024-12-07 13:24:05.153866 addonmanager.cpp:205] Loaded addon unicode
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.156: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.156: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.156: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.157: Unable to locate theme engine in module_path: "murrine",
+I2024-12-07 13:24:05.167782 addonmanager.cpp:205] Loaded addon pinyinhelper
+I2024-12-07 13:24:05.174431 addonmanager.cpp:205] Loaded addon dbus
+I2024-12-07 13:24:05.178961 addonmanager.cpp:205] Loaded addon fcitx4frontend
+I2024-12-07 13:24:05.186264 addonmanager.cpp:205] Loaded addon ibusfrontend
+I2024-12-07 13:24:05.190786 addonmanager.cpp:205] Loaded addon xim
+I2024-12-07 13:24:05.194026 addonmanager.cpp:205] Loaded addon dbusfrontend
+
+(xfce4-power-manager:1236): xfce4-power-manager-WARNING **: 13:24:05.211: Unable to connect to session manager : Failed to connect to the session manager: SESSION_MANAGER environment variable not defined
+
+(pamac-tray:1237): Gdk-CRITICAL **: 13:24:05.376: gdk_window_thaw_toplevel_updates: assertion 'window->update_and_descendants_freeze_count > 0' failed
+
+(vmware-user:1244): Gtk-WARNING **: 13:24:05.387: gtk_disable_setlocale() must be called before gtk_init()
+I2024-12-07 13:24:05.389649 inputmethodmanager.cpp:209] Found 738 input method(s) in addon keyboard
+I2024-12-07 13:24:05.412191 addonmanager.cpp:205] Loaded addon kimpanel
+I2024-12-07 13:24:05.412999 addonmanager.cpp:205] Loaded addon virtualkeyboard
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.446: Unable to locate theme engine in module_path: "adwaita",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.447: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.447: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.447: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.447: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.447: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.447: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): Gtk-WARNING **: 13:24:05.447: Unable to locate theme engine in module_path: "murrine",
+
+(nitrogen:1235): GLib-GObject-CRITICAL **: 13:24:05.448: Attempting to freeze the notification queue for object GtkSettings[0x5ee258225680]; Property notification does not work during instance finalization.
+
+(nitrogen:1235): GLib-GObject-CRITICAL **: 13:24:05.448: Attempting to thaw the notification queue for object GtkSettings[0x5ee258225680]; Property notification does not work during instance finalization.
+I2024-12-07 13:24:05.451946 classicui.cpp:64] Created classicui for x11 display::0
+I2024-12-07 13:24:05.451998 addonmanager.cpp:205] Loaded addon classicui
+I2024-12-07 13:24:05.452993 addonmanager.cpp:205] Loaded addon notificationitem
+I2024-12-07 13:24:05.453678 addonmanager.cpp:205] Loaded addon notifications
+I2024-12-07 13:24:05.459741 dbusmodule.cpp:790] Service name change: org.fcitx.Fcitx5  :1.16
+I2024-12-07 13:24:05.459837 kimpanel.cpp:116] Kimpanel new owner: 
+I2024-12-07 13:24:05.459854 virtualkeyboard.cpp:216] VirtualKeyboard new owner: 
+E2024-12-07 13:24:05.460041 portalsettingmonitor.cpp:115] DBus call error: org.freedesktop.DBus.Error.ServiceUnknown The name is not activatable
+[ 12/07/2024 13:24:06.459 parse_config_libconfig WARN ] The refresh-rate option has been deprecated. Please remove it from your configuration file. If you encounter any problems without this feature, please feel free to open a bug report
+I2024-12-07 13:24:06.476647 addonmanager.cpp:205] Loaded addon punctuation
+I2024-12-07 13:24:06.480942 addonmanager.cpp:205] Loaded addon table
+** Message: 13:24:34.458: updates_checker.vala:59: check updates
+I2024-12-07 13:54:33.012216 instance.cpp:1222] Running autosave...
+I2024-12-07 13:54:33.023269 instance.cpp:1224] End autosave
+** Message: 14:24:04.543: updates_checker.vala:59: check updates
+I2024-12-07 14:25:33.012399 instance.cpp:1222] Running autosave...
+I2024-12-07 14:25:33.015915 instance.cpp:1224] End autosave
+I2024-12-07 14:56:33.012372 instance.cpp:1222] Running autosave...
+I2024-12-07 14:56:33.016896 instance.cpp:1224] End autosave
+
+(process:1732): GLib-CRITICAL **: 15:12:41.355: g_string_insert_len: assertion 'len == 0 || val != NULL' failed
+Error parsing option sub-no (option not found)
+/home/md/.config/mpv/mpv.conf:76: setting option sub-no='bold' failed.
+Error parsing option sub-outline-size (option not found)
+/home/md/.config/mpv/mpv.conf:82: setting option sub-outline-size='3' failed.
+Invalid value for option screenshot-format: JPEG
+Error parsing option screenshot-format (option parameter could not be parsed)
+/home/md/.config/mpv/mpv.conf:185: setting option screenshot-format='JPEG' failed.
+** Message: 15:24:08.468: updates_checker.vala:59: check updates
+I2024-12-07 15:27:05.045942 instance.cpp:1222] Running autosave...
+I2024-12-07 15:27:05.050976 instance.cpp:1224] End autosave

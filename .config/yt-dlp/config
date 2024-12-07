@@ -1,0 +1,42 @@
+## --update Update this program to the latest version
+-U
+
+## --verbose Print various debugging information
+-v
+
+--output "/home/md/mdata3912-tmp/yt-dlp/%(uploader)s/%(title)s.%(ext)s"
+
+## "--console-title" and "--progress-template"
+## must be on the same line, otherwise the download will be slow.
+--console-title --progress-template "download-title:%(info.id)s-%(progress.eta)s"
+
+## Download the playlist, if the URL refers to a video and a playlist
+#--no-playlist
+--yes-playlist
+
+#--format "bv*+ba/b"
+--format bestvideo*+bestaudio/best
+
+--cookies-from-browser firefox
+
+## No format conversion is necessary, otherwise the conversion is slow.
+#--merge-output-format mp4
+
+#--split-chapters -o chapter:"D:\mdata3912-tmp\yt-dlp\/%(uploader)s/%(title)s-%(section_number)s-%(section_title)s.%(ext)s"
+
+--write-auto-subs
+--sub-langs zh-Hans,en
+
+## Post-Processing Options
+#--embed-subs
+--embed-thumbnail
+--embed-metadata
+
+## Convert the subtitles to another format
+## currently supported: ass, lrc, srt, vtt
+## Alias: --convert-subtitles
+
+--convert-subs ass
+
+## Video and sound merge
+--ffmpeg-location /usr/bin/ffmpeg

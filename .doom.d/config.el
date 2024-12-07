@@ -10,6 +10,8 @@
       doom-variable-pitch-font (font-spec :family "Mononoki Nerd Font" :size 12))
 (setq nerd-icons-font-family "Mononoki Nerd Font")
 
+
+
 (add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
 
 (add-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)

@@ -2,7 +2,8 @@
 #+AUTHOR: Doctor Dao (DD)
 #+DESCRIPTION: DD's personal Doom Emacs config.
 #+PROPERTY: header-args :tangle config.el
-#+STARTUP: showeverything
+#+auto_tangle: t
+#+STARTUP:content indent
 
 * table-of-content :toc:
 - [[#about-this-config][about-this-config]]
@@ -20,6 +21,8 @@
   - [[#hydra][hydra]]
   - [[#page-break-lines][page-break-lines]]
   - [[#dashboard][dashboard]]
+  - [[#org-auto-tangle][org-auto-tangle]]
+  - [[#rainbow-mode][rainbow-mode]]
 - [[#org-mode][org-mode]]
 - [[#dired][dired]]
   - [[#delete-by-moving-to-trash][delete-by-moving-to-trash]]
@@ -28,6 +31,7 @@
   - [[#peep-dired][peep-dired]]
 
 * about-this-config
+
 Place your private configuration here! Remember, you do not need to run =doom sync= after modifying this file!
 
 Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets. It is optional.
@@ -81,11 +85,13 @@ To get information about any of these functions/macros, move the cursor over the
 You can also try =gd= (or =C-c c d=) to jump to their definition and see how they are implemented.
 
 * lexical-binding
+
 #+begin_src emacs-lisp
 ;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 #+end_src
 
 * better-default
+
 This determines the style of line numbers in effect. If set to =nil=, line numbers are disabled. For relative line numbers, set this to =relative=.
 #+begin_src emacs-lisp
 (setq display-line-numbers-type t)
@@ -97,6 +103,7 @@ This determines the style of line numbers in effect. If set to =nil=, line numbe
 #+end_src
 
 * theme
+
 There are two ways to load a theme. Both assume the theme is installed and available. You can either set `doom-theme' or manually load a theme with the =load-theme= function. This is the default:
 
 #+begin_src emacs-lisp
@@ -107,37 +114,45 @@ There are two ways to load a theme. Both assume the theme is installed and avail
 #+end_src
 
 * package
+
 ** nerd-icons
+
 #+begin_src emacs-lisp
 #+end_src
 
 ** nerd-icons-dired
+
 #+begin_src emacs-lisp
 (add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
 #+end_src
 
 ** nerd-icons-ibuffer
+
 #+begin_src emacs-lisp
 (add-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)
 #+end_src
 
 ** nerd-icons-completion
+
 #+begin_src emacs-lisp
 (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 #+end_src
 
 ** nerd-icons-corfu
+
 #+begin_src emacs-lisp
 (with-eval-after-load 'corfu
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 #+end_src
 
 ** beacon
+
 #+begin_src emacs-lisp
 (beacon-mode 1)
 #+end_src
 
 ** doom-dashboard
+
 #+begin_src emacs-lisp
 ;(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 (add-hook! '+doom-dashboard-functions :append
@@ -163,7 +178,9 @@ There are two ways to load a theme. Both assume the theme is installed and avail
 #+end_src
 
 ** hydra
+
 *** window
+
 #+begin_src emacs-lisp
 (use-package! hydra
   :defer
@@ -194,6 +211,7 @@ There are two ways to load a theme. Both assume the theme is installed and avail
 #+end_src
 
 *** dired
+
 #+begin_src emacs-lisp
 (defhydra hydra-dired (:hint nil :color pink)
   "
@@ -252,6 +270,7 @@ T - tag prefix
 #+end_src
 
 ** page-break-lines
+
 ⚠ Fail
 #+begin_src emacs-lisp
 ;(global-page-break-lines-mode 1)
@@ -259,6 +278,7 @@ T - tag prefix
 #+end_src
 
 ** dashboard
+
 #+begin_src emacs-lisp
 (use-package dashboard
   :ensure t
@@ -284,8 +304,44 @@ T - tag prefix
         initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 #+end_src
 
+** org-auto-tangle
+
+=org-auto-tangle= allows you to add the option =#+auto_tangle: t= in your Org file so that it automatically tangles when you save the document. I have made adding this to your file even easier by creating a function =dt/insert-auto-tangle-tag= and setting it to a keybinding =SPC i a=.
+#+begin_src emacs-lisp
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t))
+
+(defun dt/insert-auto-tangle-tag ()
+  "Insert auto-tangle tag in a literate config."
+  (interactive)
+  (evil-org-open-below 1)
+  (insert "#+auto_tangle: t ")
+  (evil-force-normal-state))
+
+(map! :leader
+      :desc "Insert auto_tangle tag" "i a" #'dt/insert-auto-tangle-tag)
+#+end_src
+
+** rainbow-mode
+
+Rainbox mode displays the actual color for any hex value color.  It’s such a nice feature that I wanted it turned on all the time, regardless of what mode I am in.  The following creates a global minor mode for rainbow-mode and enables it (exception: org-agenda-mode since rainbow-mode destroys all highlighting in org-agenda).
+
+#+begin_src emacs-lisp
+(define-globalized-minor-mode global-rainbow-mode rainbow-mode
+  (lambda ()
+    (when (not (memq major-mode
+                (list 'org-agenda-mode)))
+     (rainbow-mode 1))))
+(global-rainbow-mode 1 )
+#+end_src
+
 * org-mode
+
 If you use =org= and don't want your org files in the default location below, change =org-directory=. It must be set before org loads!
+
 #+begin_src emacs-lisp
 (setq org-directory "~/org/")
 #+end_src
@@ -294,8 +350,29 @@ If you use =org= and don't want your org files in the default location below, ch
 (setq org-link-file-path-type 'relative)
 #+end_src
 
+Structure templates.
+
+#+begin_src emacs-lisp
+(use-package! org-tempo
+  :ensure nil
+  :demand t
+  :config
+  (dolist (item '(("sh" . "src sh")
+                  ("el" . "src emacs-lisp")
+                  ("li" . "src lisp")
+                  ("sc" . "src scheme")
+                  ("ts" . "src typescript")
+                  ("py" . "src python")
+                  ("yaml" . "src yaml")
+                  ("json" . "src json")
+                  ("einit" . "src emacs-lisp :tangle emacs/init.el")
+                  ("emodule" . "src emacs-lisp :tangle emacs/modules/dw-MODULE.el")))
+    (add-to-list 'org-structure-template-alist item)))
+#+end_src
+
 * dired
 ** delete-by-moving-to-trash
+
 ⚠ Windows shared folder report error:
 #+begin_quote
 file-error: Copying permissions to: Operation not permitted, /home/md/mdata3912-trash/1.txt.~1~
@@ -309,12 +386,14 @@ file-error: Copying permissions to: Operation not permitted, /home/md/mdata3912-
 #+end_src
 
 ** dired-listing-switches
+
 ⚠ Fail
 #+begin_src emacs-lisp
 (setq! dired-listing-switches "-ahl -v")
 #+end_src
 
 ** dirvish
+
 #+begin_src emacs-lisp
 (after! dirvish
   (setq! dirvish-quick-access-entries
@@ -327,6 +406,7 @@ file-error: Copying permissions to: Operation not permitted, /home/md/mdata3912-
 #+end_src
 
 ** peep-dired
+
 #+begin_src emacs-lisp
 (evil-define-key 'normal peep-dired-mode-map
   (kbd "j") 'peep-dired-next-file

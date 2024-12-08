@@ -153,9 +153,48 @@ T - tag prefix
         dashboard-banner-logo-title "good-better-best-never-let-it-rest"
         initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t))
+
+(defun dt/insert-auto-tangle-tag ()
+  "Insert auto-tangle tag in a literate config."
+  (interactive)
+  (evil-org-open-below 1)
+  (insert "#+auto_tangle: t ")
+  (evil-force-normal-state))
+
+(map! :leader
+      :desc "Insert auto_tangle tag" "i a" #'dt/insert-auto-tangle-tag)
+
+(define-globalized-minor-mode global-rainbow-mode rainbow-mode
+  (lambda ()
+    (when (not (memq major-mode
+                (list 'org-agenda-mode)))
+     (rainbow-mode 1))))
+(global-rainbow-mode 1 )
+
 (setq org-directory "~/org/")
 
 (setq org-link-file-path-type 'relative)
+
+(use-package! org-tempo
+  :ensure nil
+  :demand t
+  :config
+  (dolist (item '(("sh" . "src sh")
+                  ("el" . "src emacs-lisp")
+                  ("li" . "src lisp")
+                  ("sc" . "src scheme")
+                  ("ts" . "src typescript")
+                  ("py" . "src python")
+                  ("yaml" . "src yaml")
+                  ("json" . "src json")
+                  ("einit" . "src emacs-lisp :tangle emacs/init.el")
+                  ("emodule" . "src emacs-lisp :tangle emacs/modules/dw-MODULE.el")))
+    (add-to-list 'org-structure-template-alist item)))
 
 ;(setq! delete-by-moving-to-trash t
 ;       trash-directory "~/mdata3912-trash")

@@ -5,6 +5,8 @@
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "qutebrowser")
 
+(setq max-lisp-eval-depth 10000)
+
 (setq doom-theme 'doom-one)
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 12)
       doom-variable-pitch-font (font-spec :family "Mononoki Nerd Font" :size 12))
@@ -135,7 +137,7 @@ T - tag prefix
   :config
   (dashboard-setup-startup-hook)
   :init
-  (setq dashboard-items '((recents  . 5)
+  (setq dashboard-items '((recents  . 15)
                          (bookmarks . 5)
                          (projects  . 5)
                          (agenda    . 5)
@@ -150,7 +152,7 @@ T - tag prefix
         dashboard-icon-type 'nerd-icons
         dashboard-set-heading-icons t
         dashboard-set-file-icons t
-        dashboard-banner-logo-title "good-better-best-never-let-it-rest"
+;       dashboard-banner-logo-title "good-better-best-never-let-it-rest"
         initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 
 (use-package! org-auto-tangle
@@ -175,6 +177,69 @@ T - tag prefix
                 (list 'org-agenda-mode)))
      (rainbow-mode 1))))
 (global-rainbow-mode 1 )
+
+
+
+(use-package! lsp-mode
+  :defer t
+  :commands (lsp lsp-deferred)
+; :init
+; (defun lsp-save-actions ()
+;   "LSP actions before save."
+;   (add-hook 'before-save-hook #'lsp-organize-imports t t)
+;   (add-hook 'before-save-hook #'lsp-format-buffer t t))
+  :hook ((lsp-mode . #'lsp-enable-which-key-integration)
+;        (lsp-mode . #'lsp-save-actions)
+         ((python-mode
+           vimrc-mode
+           css-mode
+           html+-mode
+           javascript-mode
+           typescript-mode
+           json-mode
+           sh-mode) . lsp-deferred))
+; :config
+; (setq lsp-auto-guess-root t
+;       lsp-headerline-breadcrumb-enable nil
+;       lsp-keymap-prefix "C-c l"
+;       lsp-log-io nil)
+; (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+)
+
+(use-package! lsp-ui
+  :defer t
+  :commands lsp-ui-mode
+  :hook
+  (lsp-mode . lsp-ui-mode)
+  :config
+  (setq
+;  lsp-enable-symbol-highlighting t
+;  lsp-lens-enable t
+;  lsp-headerline-breadcrumb-enable t
+;  lsp-completion-show-kind t
+  )
+)
+
+(use-package! lsp-pyright
+  :ensure t
+  :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+
+(use-package! vimrc-mode
+  :defer t
+  :mode
+  "\\.vim\\(rc\\)?\\'"
+  "\\.vifm\\'"
+  :config
+  (setq evil-shift-width 2))
+
+(after! lsp-volar
+  ;; remove :system after lsp-volar loaded
+  (lsp-dependency 'typescript
+                  '(:npm :package "typescript"
+                    :path "tsserver")))
 
 (setq org-directory "~/org/")
 

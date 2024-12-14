@@ -19,8 +19,6 @@ set TERM "xterm-256color"                         # Sets the terminal type
 #set VISUAL "emacsclient -c -a emacs"              # $VISUAL use Emacs in GUI mode
 set EDITOR "nvim"                                 # $EDITOR use Emacs in terminal
 set VISUAL "nvim"                                 # $VISUAL use Emacs in GUI mode
-#set EDITOR "nvim"                                # $EDITOR use Emacs in terminal
-#set VISUAL "nvim"                                # $VISUAL use Emacs in GUI mode
 set BROWSER "/usr/bin/qutebrowser"
 
 ### SET MANPAGER

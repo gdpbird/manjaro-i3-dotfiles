@@ -23,6 +23,19 @@
   - [[#dashboard][dashboard]]
   - [[#org-auto-tangle][org-auto-tangle]]
   - [[#rainbow-mode][rainbow-mode]]
+  - [[#typescript-mode][typescript-mode]]
+- [[#lsp][lsp]]
+  - [[#lsp-mode][lsp-mode]]
+  - [[#lsp-ui][lsp-ui]]
+  - [[#python][python]]
+  - [[#vimrc-mode][vimrc-mode]]
+  - [[#bash][bash]]
+  - [[#awk][awk]]
+  - [[#css][css]]
+  - [[#html][html]]
+  - [[#javascripttypescript][javascript/typescript]]
+  - [[#json][json]]
+  - [[#fqa][fqa]]
 - [[#org-mode][org-mode]]
 - [[#dired][dired]]
   - [[#delete-by-moving-to-trash][delete-by-moving-to-trash]]
@@ -102,6 +115,11 @@ This determines the style of line numbers in effect. If set to =nil=, line numbe
       browse-url-generic-program "qutebrowser")
 #+end_src
 
+macroexp--expand-all: Lisp nesting exceeds ‘max-lisp-eval-depth’
+#+begin_src emacs-lisp
+(setq max-lisp-eval-depth 10000)
+#+end_src
+
 * theme
 
 There are two ways to load a theme. Both assume the theme is installed and available. You can either set `doom-theme' or manually load a theme with the =load-theme= function. This is the default:
@@ -118,6 +136,7 @@ There are two ways to load a theme. Both assume the theme is installed and avail
 ** nerd-icons
 
 #+begin_src emacs-lisp
+
 #+end_src
 
 ** nerd-icons-dired
@@ -285,7 +304,7 @@ T - tag prefix
   :config
   (dashboard-setup-startup-hook)
   :init
-  (setq dashboard-items '((recents  . 5)
+  (setq dashboard-items '((recents  . 15)
                          (bookmarks . 5)
                          (projects  . 5)
                          (agenda    . 5)
@@ -300,7 +319,7 @@ T - tag prefix
         dashboard-icon-type 'nerd-icons
         dashboard-set-heading-icons t
         dashboard-set-file-icons t
-        dashboard-banner-logo-title "good-better-best-never-let-it-rest"
+;       dashboard-banner-logo-title "good-better-best-never-let-it-rest"
         initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 #+end_src
 
@@ -337,6 +356,177 @@ Rainbox mode displays the actual color for any hex value color.  It’s such a n
      (rainbow-mode 1))))
 (global-rainbow-mode 1 )
 #+end_src
+
+** typescript-mode
+
+#+begin_src emacs-lisp
+
+#+end_src
+
+* lsp
+
+** lsp-mode
+
+#+begin_quote
+$ pacman -S npm
+#+end_quote
+
+#+begin_src emacs-lisp
+(use-package! lsp-mode
+  :defer t
+  :commands (lsp lsp-deferred)
+; :init
+; (defun lsp-save-actions ()
+;   "LSP actions before save."
+;   (add-hook 'before-save-hook #'lsp-organize-imports t t)
+;   (add-hook 'before-save-hook #'lsp-format-buffer t t))
+  :hook ((lsp-mode . #'lsp-enable-which-key-integration)
+;        (lsp-mode . #'lsp-save-actions)
+         ((python-mode
+           vimrc-mode
+           css-mode
+           html+-mode
+           javascript-mode
+           typescript-mode
+           json-mode
+           sh-mode) . lsp-deferred))
+; :config
+; (setq lsp-auto-guess-root t
+;       lsp-headerline-breadcrumb-enable nil
+;       lsp-keymap-prefix "C-c l"
+;       lsp-log-io nil)
+; (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+)
+#+end_src
+
+** lsp-ui
+
+#+begin_src emacs-lisp
+(use-package! lsp-ui
+  :defer t
+  :commands lsp-ui-mode
+  :hook
+  (lsp-mode . lsp-ui-mode)
+  :config
+  (setq
+;  lsp-enable-symbol-highlighting t
+;  lsp-lens-enable t
+;  lsp-headerline-breadcrumb-enable t
+;  lsp-completion-show-kind t
+  )
+)
+#+end_src
+
+** python
+
+[[https://emacs-lsp.github.io/lsp-pyright/][lsp-pyright]]
+[[https://github.com/emacs-lsp/lsp-pyright/][github#emacs-lsp/lsp-pyright]]
+#+begin_quote
+$ pacman -S pyright
+#+end_quote
+
+#+begin_src emacs-lisp
+(use-package! lsp-pyright
+  :ensure t
+  :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+#+end_src
+
+** vimrc-mode
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-vimscript/][lsp-mode#languages#vimscript]]
+[[https://github.com/iamcco/vim-language-server][github#iamcco/vim-language-server]]
+#+begin_quote
+$ sudo npm install -g vim-language-server
+#+end_quote
+
+#+begin_src emacs-lisp
+(use-package! vimrc-mode
+  :defer t
+  :mode
+  "\\.vim\\(rc\\)?\\'"
+  "\\.vifm\\'"
+  :config
+  (setq evil-shift-width 2))
+#+end_src
+
+** bash
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-bash/][lsp-mode#languages#bash]]
+[[https://github.com/bash-lsp/bash-language-server?tab=readme-ov-file#emacs][github#bash-lsp/bash-language-server]]
+#+begin_quote
+$ sudo npm i -g bash-language-server
+#+end_quote
+
+** awk
+
+*Support is built-in*, so no action is needed besides turning =lsp-mode= on.
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-awk/][lsp-mode#languages#awk]]
+[[https://github.com/Beaglefoot/awk-language-server][github#beaglefoot/awk-language-server]]
+#+begin_quote
+$ sudo npm i -g awk-language-server
+#+end_quote
+
+** css
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-css/][lsp-mode#languages#css/lesscss/sass/scss]]
+#+begin_quote
+$ sudo npm install -g vscode-langservers-extracted
+#+end_quote
+
+** html
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-html/][lsp-mode#languages#html]]
+[[https://github.com/microsoft/vscode/tree/main/extensions/html-language-features/server][github#microsoft/vscode#vscode/extensions/html-language-features/server]]
+#+begin_quote
+$ sudo npm install -g vscode-langservers-extracted
+#+end_quote
+
+** javascript/typescript
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-typescript/][lsp-mode#languages#javascript/typescript]]
+[[https://github.com/typescript-language-server/typescript-language-server][github#typescript-language-server/typescript-language-server]]
+#+begin_quote
+$ sudo npm i -g typescript-language-server
+$ sudo npm i -g typescript
+#+end_quote
+
+[[https://github.com/emacs-lsp/lsp-mode/issues/4313][github#emacs-lsp/lsp-mode#issue-4313#typescript-is-not-detected-correctly]]
+#+begin_src emacs-lisp
+(after! lsp-volar
+  ;; remove :system after lsp-volar loaded
+  (lsp-dependency 'typescript
+                  '(:npm :package "typescript"
+                    :path "tsserver")))
+#+end_src
+
+** json
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-json/][lsp-mode#languages#json]]
+#+begin_quote
+$ sudo npm i -g vscode-langservers-extracted
+#+end_quote
+
+[[https://github.com/emacs-lsp/lsp-mode/issues/4570][github#emacs-lsp/lsp-mode#issue-4570#warning-lsp-mode--unknown-request-method-workspace/diagnostic/refresh]]
+#+begin_quote
+Unresolved.
+#+end_quote
+
+** fqa
+
+*** error-processing-message-file-missing-opening-directory-no-such-file-or-directory
+
+[[https://www.skfwe.cn/p/windows-%E4%B8%8Bdoom-emacs-%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEpyright/][一不留神的博客#windows下doomemacs安装配置pyright]]
+
+Check the save location of session directory via variable =lsp-session-file= and manually delete the non-existent directory.
+Use function =lsp-workspace-folders-remove= or =lsp-workspace-remove-all-folders=.
+
+*** error-does-not-support-method-textdocument-definition
+
+Executed =M-x lsp= in your current buffer.
 
 * org-mode
 

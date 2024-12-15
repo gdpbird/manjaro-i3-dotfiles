@@ -35,13 +35,17 @@
   - [[#html][html]]
   - [[#javascripttypescript][javascript/typescript]]
   - [[#json][json]]
+  - [[#cc][cc]]
   - [[#fqa][fqa]]
+- [[#tree-sitter][tree-sitter]]
 - [[#org-mode][org-mode]]
 - [[#dired][dired]]
   - [[#delete-by-moving-to-trash][delete-by-moving-to-trash]]
   - [[#dired-listing-switches][dired-listing-switches]]
   - [[#dirvish][dirvish]]
   - [[#peep-dired][peep-dired]]
+- [[#editor][editor]]
+  - [[#snippets][snippets]]
 
 * about-this-config
 
@@ -359,6 +363,8 @@ Rainbox mode displays the actual color for any hex value color.  It’s such a n
 
 ** typescript-mode
 
+[[https://vxlabs.com/2022/06/12/typescript-development-with-emacs-tree-sitter-and-lsp-in-2022/][vxlabs#typescript-development-with-emacs-tree-sitter-and-lsp-in-2022]]
+
 #+begin_src emacs-lisp
 
 #+end_src
@@ -375,22 +381,26 @@ $ pacman -S npm
 (use-package! lsp-mode
   :defer t
   :commands (lsp lsp-deferred)
-; :init
+  :init
 ; (defun lsp-save-actions ()
 ;   "LSP actions before save."
 ;   (add-hook 'before-save-hook #'lsp-organize-imports t t)
 ;   (add-hook 'before-save-hook #'lsp-format-buffer t t))
   :hook ((lsp-mode . #'lsp-enable-which-key-integration)
 ;        (lsp-mode . #'lsp-save-actions)
-         ((python-mode
+         ((
+           python-mode
            vimrc-mode
            css-mode
            html+-mode
            javascript-mode
            typescript-mode
            json-mode
-           sh-mode) . lsp-deferred))
-; :config
+           c-mode
+           c++-mode
+           sh-mode
+          ) . lsp-deferred))
+  :config
 ; (setq lsp-auto-guess-root t
 ;       lsp-headerline-breadcrumb-enable nil
 ;       lsp-keymap-prefix "C-c l"
@@ -408,12 +418,28 @@ $ pacman -S npm
   :hook
   (lsp-mode . lsp-ui-mode)
   :config
-  (setq
-;  lsp-enable-symbol-highlighting t
-;  lsp-lens-enable t
-;  lsp-headerline-breadcrumb-enable t
-;  lsp-completion-show-kind t
-  )
+; (setq lsp-enable-symbol-highlighting nil ;; Symbol highlighting
+;       lsp-ui-doc-enable nil ;; lsp-ui-doc - on hover dialogs. * disable via
+;       lsp-ui-doc-show-with-cursor nil ;; disable cursor hover (keep mouse hover)
+;       lsp-ui-doc-show-with-mouse nil ;; disable mouse hover (keep cursor hover)
+;       lsp-lens-enable nil ;; Lenses
+;       lsp-headerline-breadcrumb-enable nil ;; Headerline
+;       lsp-ui-sideline-enable nil ;; Sideline code actions * disable whole sideline via
+;       lsp-ui-sideline-show-code-actions nil ;; * hide code actions
+;       lsp-ui-sideline-enable nil ;; Sideline hover symbols * disable whole sideline via
+;       lsp-ui-sideline-show-hover nil ;; * hide only hover symbols
+;       lsp-modeline-code-actions-enable nil ;; Modeline code actions
+;       lsp-diagnostics-provider :none ;; Flycheck (or flymake if no flycheck is present)
+;       lsp-ui-sideline-enable nil ;; Sideline diagnostics * disable whole sideline via
+;       lsp-ui-sideline-show-diagnostics nil ;; * hide only errors
+;       lsp-eldoc-enable-hover nil ;; Eldoc
+;       lsp-modeline-diagnostics-enable nil ;; Modeline diagnostics statistics
+;       lsp-signature-auto-activate nil ;; Signature help. You could manually request them via `lsp-signature-activate`
+;       lsp-signature-render-documentation nil ;; Signature help documentation (keep the signatures)
+;       lsp-completion-provider :none ;; Completion (company-mode)
+;       lsp-completion-show-detail nil ;; Completion item detail
+;       lsp-completion-show-kind nil ;; Completion item kind
+; )
 )
 #+end_src
 
@@ -515,6 +541,15 @@ $ sudo npm i -g vscode-langservers-extracted
 Unresolved.
 #+end_quote
 
+** cc
+
+[[https://emacs-lsp.github.io/lsp-mode/page/lsp-clangd/][lsp-mode#languages#c++]]
+[[https://clangd.llvm.org/installation.html#editor-plugins][clangd#editor-plugins]]
+#+begin_quote
+$ sudo pacman -S clang
+$ sudo pacman -S llvm
+#+end_quote
+
 ** fqa
 
 *** error-processing-message-file-missing-opening-directory-no-such-file-or-directory
@@ -527,6 +562,24 @@ Use function =lsp-workspace-folders-remove= or =lsp-workspace-remove-all-folders
 *** error-does-not-support-method-textdocument-definition
 
 Executed =M-x lsp= in your current buffer.
+
+*** switch-between-lsp-or-eglot
+
+#+begin_quote
+1.2 Module flags
+- +eglot ::
+  Use [[https://elpa.gnu.org/packages/eglot.html][Eglot]] instead of [[https://github.com/emacs-lsp/lsp-mode][LSP-mode]] to implement the LSP client in Emacs.
+3.2 Differences between eglot and lsp-mode
+All that said, it's easy to switch between the two implementations by swapping in/out the [[doom-module:+lsp]] or [[doom-module:+eglot]] flag when [[id:01cffea4-3329-45e2-a892-95a384ab2338][enabling this module]].
+#+end_quote
+
+* tree-sitter
+
+#+begin_src emacs-lisp
+;(setq +tree-sitter-hl-enabled-modes '(python-mode go-mode))
+;(setq +tree-sitter-hl-enabled-modes '(not web-mode typescript-tsx-mode))
+(setq +tree-sitter-hl-enabled-modes t)
+#+end_src
 
 * org-mode
 
@@ -615,4 +668,25 @@ Add the key binding =SPC d p= to toggle =peep-dired-mode= while in dired (you ca
         (:map dired-mode-map
          :desc "Peep-dired image preview" "d p" #'peep-dired
          :desc "Dired view file" "d v" #'dired-view-file)))
+#+end_src
+
+* editor
+
+** snippets
+
+#+begin_quote error
+[yas] Check your `yas-snippet-dirs': /home/md/.doom.d/snippets/ is not a directory
+[yas] Prepared just-in-time loading of snippets with some errors.  Check *Messages*.
+#+end_quote
+
+[[https://discourse.doomemacs.org/t/yasnippet-fails-to-locate-my-private-snippets/2796][discourse#doom-emacs#yasnippet-fails-to-locate-my-private-snippets]]
+[[https://www.reddit.com/r/DoomEmacs/comments/yfix2g/proper_way_to_set_yassnippetsdirs_in_doomdconfigel/][reddit#r/doomemacs#proper-way-to-set-yas-snippets-dirs-in-~/.doom.d/config.el]]
+
+#+begin_quote
+$ mkdir ~/.doom.d/snippets
+#+end_quote
+
+#+begin_src emacs-lisp
+(after! yasnippet
+  (add-to-list 'yas-snippet-dirs "~/.doom.d/snippets"))
 #+end_src

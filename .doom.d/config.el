@@ -183,22 +183,26 @@ T - tag prefix
 (use-package! lsp-mode
   :defer t
   :commands (lsp lsp-deferred)
-; :init
+  :init
 ; (defun lsp-save-actions ()
 ;   "LSP actions before save."
 ;   (add-hook 'before-save-hook #'lsp-organize-imports t t)
 ;   (add-hook 'before-save-hook #'lsp-format-buffer t t))
   :hook ((lsp-mode . #'lsp-enable-which-key-integration)
 ;        (lsp-mode . #'lsp-save-actions)
-         ((python-mode
+         ((
+           python-mode
            vimrc-mode
            css-mode
            html+-mode
            javascript-mode
            typescript-mode
            json-mode
-           sh-mode) . lsp-deferred))
-; :config
+           c-mode
+           c++-mode
+           sh-mode
+          ) . lsp-deferred))
+  :config
 ; (setq lsp-auto-guess-root t
 ;       lsp-headerline-breadcrumb-enable nil
 ;       lsp-keymap-prefix "C-c l"
@@ -212,12 +216,28 @@ T - tag prefix
   :hook
   (lsp-mode . lsp-ui-mode)
   :config
-  (setq
-;  lsp-enable-symbol-highlighting t
-;  lsp-lens-enable t
-;  lsp-headerline-breadcrumb-enable t
-;  lsp-completion-show-kind t
-  )
+; (setq lsp-enable-symbol-highlighting nil ;; Symbol highlighting
+;       lsp-ui-doc-enable nil ;; lsp-ui-doc - on hover dialogs. * disable via
+;       lsp-ui-doc-show-with-cursor nil ;; disable cursor hover (keep mouse hover)
+;       lsp-ui-doc-show-with-mouse nil ;; disable mouse hover (keep cursor hover)
+;       lsp-lens-enable nil ;; Lenses
+;       lsp-headerline-breadcrumb-enable nil ;; Headerline
+;       lsp-ui-sideline-enable nil ;; Sideline code actions * disable whole sideline via
+;       lsp-ui-sideline-show-code-actions nil ;; * hide code actions
+;       lsp-ui-sideline-enable nil ;; Sideline hover symbols * disable whole sideline via
+;       lsp-ui-sideline-show-hover nil ;; * hide only hover symbols
+;       lsp-modeline-code-actions-enable nil ;; Modeline code actions
+;       lsp-diagnostics-provider :none ;; Flycheck (or flymake if no flycheck is present)
+;       lsp-ui-sideline-enable nil ;; Sideline diagnostics * disable whole sideline via
+;       lsp-ui-sideline-show-diagnostics nil ;; * hide only errors
+;       lsp-eldoc-enable-hover nil ;; Eldoc
+;       lsp-modeline-diagnostics-enable nil ;; Modeline diagnostics statistics
+;       lsp-signature-auto-activate nil ;; Signature help. You could manually request them via `lsp-signature-activate`
+;       lsp-signature-render-documentation nil ;; Signature help documentation (keep the signatures)
+;       lsp-completion-provider :none ;; Completion (company-mode)
+;       lsp-completion-show-detail nil ;; Completion item detail
+;       lsp-completion-show-kind nil ;; Completion item kind
+; )
 )
 
 (use-package! lsp-pyright
@@ -240,6 +260,10 @@ T - tag prefix
   (lsp-dependency 'typescript
                   '(:npm :package "typescript"
                     :path "tsserver")))
+
+;(setq +tree-sitter-hl-enabled-modes '(python-mode go-mode))
+;(setq +tree-sitter-hl-enabled-modes '(not web-mode typescript-tsx-mode))
+(setq +tree-sitter-hl-enabled-modes t)
 
 (setq org-directory "~/org/")
 
@@ -290,3 +314,6 @@ T - tag prefix
         (:map dired-mode-map
          :desc "Peep-dired image preview" "d p" #'peep-dired
          :desc "Dired view file" "d v" #'dired-view-file)))
+
+(after! yasnippet
+  (add-to-list 'yas-snippet-dirs "~/.doom.d/snippets"))

@@ -4,77 +4,124 @@
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "qutebrowser")
-
 (setq max-lisp-eval-depth 10000)
 
-(setq doom-theme 'doom-one)
+(use-package! doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-one t)
+; (doom-themes-visual-bell-config)
+  (doom-themes-neotree-config)
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config))
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t
+        doom-themes-treemacs-theme "doom-atom")
+
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 12)
       doom-variable-pitch-font (font-spec :family "Mononoki Nerd Font" :size 12))
 (setq nerd-icons-font-family "Mononoki Nerd Font")
+(setq doom-emoji-font (font-spec :family "Twitter Color Emoji"))
 
+;(setq doom-unicode-font (font-spec :family "TeX Gyre Termes Math"))
 
+(setq doom-unicode-font (font-spec :family "JuliaMono-Regular"))
 
-(add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
+(add-to-list 'doom-emoji-fallback-font-families "Twitter Color Emoji")
 
-(add-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)
+(use-package! nerd-icons
+  :custom
+  (nerd-icons-font-family "Symbols Nerd Font Mono"))
 
-(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+(use-package! nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
-(with-eval-after-load 'corfu
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+(use-package! nerd-icons-ibuffer
+  :ensure t
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode)
+  :config
+  (setq nerd-icons-ibuffer-icon t
+        nerd-icons-ibuffer-color-icon t
+        nerd-icons-ibuffer-icon-size 1.0
+        nerd-icons-ibuffer-human-readable-size t
+        inhibit-compacting-font-caches t)
+  nerd-icons-ibuffer-formats)
+
+(use-package! nerd-icons-completion
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+(use-package! nerd-icons-corfu
+; :config
+; (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+)
 
 (beacon-mode 1)
 
-;(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-(add-hook! '+doom-dashboard-functions :append
-  (insert "\n" (+doom-dashboard--center +doom-dashboard--width "刀客的刀DoctorDao")))
+(use-package! dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  :init
+  (setq dashboard-items '((recents  . 15)
+                         (bookmarks . 5)
+                         (projects  . 5)
+                         (agenda    . 5)
+                         (registers . 5))
+;       dashboard-startup-banner "~/mdata3912-tmp/doctordao.jpg"
+        dashboard-item-shortcuts '((recents   . "r")
+                                   (bookmarks . "m")
+                                   (projects  . "p")
+                                   (agenda    . "a")
+                                   (registers . "e"))
+        dashboard-display-icons-p t
+        dashboard-icon-type 'nerd-icons
+        dashboard-set-heading-icons t
+        dashboard-set-file-icons t
+;       dashboard-banner-logo-title "good-better-best-never-let-it-rest"
+        initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 
-;(defun my-weebery-is-always-greater ()
-;  (let* ((banner '(" ██████╗  ██████╗  ██████╗ ██████╗        ██████╗ ███████╗████████╗████████╗███████╗██████╗        ██████╗ ███████╗███████╗████████╗"
-;                   "██╔════╝ ██╔═══██╗██╔═══██╗██╔══██╗       ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗       ██╔══██╗██╔════╝██╔════╝╚══██╔══╝"
-;                   "██║  ███╗██║   ██║██║   ██║██║  ██║       ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝       ██████╔╝█████╗  ███████╗   ██║   "
-;                   "██║   ██║██║   ██║██║   ██║██║  ██║       ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗       ██╔══██╗██╔══╝  ╚════██║   ██║   "
-;                   "╚██████╔╝╚██████╔╝╚██████╔╝██████╔╝▄█╗    ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║▄█╗    ██████╔╝███████╗███████║   ██║██╗"
-;                   " ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝    ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝    ╚═════╝ ╚══════╝╚══════╝   ╚═╝╚═╝"))
-;         (longest-line (apply #'max (mapcar #'length banner))))
-;    (put-text-property
-;     (point)
-;     (dolist (line banner (point))
-;       (insert (+doom-dashboard--center
-;                +doom-dashboard--width
-;                (concat line (make-string (max 0 (- longest-line (length line))) 32)))
-;               "\n"))
-;     'face 'doom-dashboard-banner)))
-;(setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
+;(page-break-lines-mode)
+(use-package! page-break-lines
+  :hook (dashboard-mode-hook . page-break-lines-mode))
+
+(define-globalized-minor-mode global-rainbow-mode rainbow-mode
+  (lambda ()
+    (when (not (memq major-mode
+                (list 'org-agenda-mode)))
+     (rainbow-mode 1))))
+(global-rainbow-mode 1 )
+
+(setq! emojify-emojis-dir "~/.emacs.d/.local/cache/emojis")
+(setq! emojify-download-emojis-p 'ask)
+(setq! emojify-emoji-set "twemoji-color-font")
 
 (use-package! hydra
-  :defer
-  :config
-  (defhydra hydra/evil-window-resize (:hint nil :color red)
-    "
-           _k_
-           ↑
-           |
-     _h_ ←-- ◌ --→ _l_
-           |
-           ↓
-           _j_
-    "
-;   ("l" evil-window-decrease-width "decrease width")
-;   ("k" evil-window-decrease-height "decrease height")
-;   ("j" evil-window-increase-height "increase height")
-;   ("h" evil-window-increase-width "increase width")
-;   ("q" nil "quit")
-    ("l" evil-window-decrease-width)
-    ("k" evil-window-decrease-height)
-    ("j" evil-window-increase-height)
-    ("h" evil-window-increase-width)
-    ("q" nil)))
-(map! :leader
-      :prefix ("w" . "window")
-      :n "z" #'hydra/evil-window-resize/body)
+  :defer)
 
-(defhydra hydra-dired (:hint nil :color pink)
+(defhydra hydra/evil-window-resize (:hint nil :color red)
+  "
+         _k_
+         ↑
+    _h_ ←  o → _l_
+         ↓
+         _j_
+  "
+; ("l" evil-window-decrease-width "decrease width")
+; ("k" evil-window-decrease-height "decrease height")
+; ("j" evil-window-increase-height "increase height")
+; ("h" evil-window-increase-width "increase width")
+; ("q" nil "quit")
+  ("l" evil-window-decrease-width)
+  ("k" evil-window-decrease-height)
+  ("j" evil-window-increase-height)
+  ("h" evil-window-increase-width)
+  ("q" nil))
+
+(defhydra hydra/dired (:hint nil :color pink)
   "
 _+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
 _C_opy             _O_ view other   _U_nmark all       _)_ omit-mode      _$_ hide-subdir    C-x C-q : edit
@@ -113,7 +160,8 @@ T - tag prefix
   ("R" dired-do-rename)
   ("r" dired-do-rsynch)
   ("S" dired-do-symlink)
-  ("s" dired-sort-toggle-or-edit)
+; ("s" dired-sort-toggle-or-edit)
+  ("s" cycle-dired-switches)
   ("t" dired-toggle-marks)
   ("U" dired-unmark-all-marks)
   ("u" dired-unmark)
@@ -126,59 +174,10 @@ T - tag prefix
   ("." nil :color blue))
 
 (map! :leader
-      :prefix ("d" . "dired")
-      :n "h" #'hydra-dired/body)
-
-;(global-page-break-lines-mode 1)
-(page-break-lines-mode)
-
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook)
-  :init
-  (setq dashboard-items '((recents  . 15)
-                         (bookmarks . 5)
-                         (projects  . 5)
-                         (agenda    . 5)
-                         (registers . 5))
-;       dashboard-startup-banner "~/mdata3912-tmp/doctordao.jpg"
-        dashboard-item-shortcuts '((recents   . "r")
-                                   (bookmarks . "m")
-                                   (projects  . "p")
-                                   (agenda    . "a")
-                                   (registers . "e"))
-        dashboard-display-icons-p t
-        dashboard-icon-type 'nerd-icons
-        dashboard-set-heading-icons t
-        dashboard-set-file-icons t
-;       dashboard-banner-logo-title "good-better-best-never-let-it-rest"
-        initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
-
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode)
-  :config
-  (setq org-auto-tangle-default t))
-
-(defun dt/insert-auto-tangle-tag ()
-  "Insert auto-tangle tag in a literate config."
-  (interactive)
-  (evil-org-open-below 1)
-  (insert "#+auto_tangle: t ")
-  (evil-force-normal-state))
-
-(map! :leader
-      :desc "Insert auto_tangle tag" "i a" #'dt/insert-auto-tangle-tag)
-
-(define-globalized-minor-mode global-rainbow-mode rainbow-mode
-  (lambda ()
-    (when (not (memq major-mode
-                (list 'org-agenda-mode)))
-     (rainbow-mode 1))))
-(global-rainbow-mode 1 )
-
-
+       (:prefix ("y" . "hydra")
+         (:prefix ("w" . "window")
+          :desc "evil-window-resize" :n "r" #'hydra/evil-window-resize/body)
+        :desc "dired" :n "d" #'hydra/dired/body))
 
 (use-package! lsp-mode
   :defer t
@@ -216,36 +215,86 @@ T - tag prefix
   :hook
   (lsp-mode . lsp-ui-mode)
   :config
-; (setq lsp-enable-symbol-highlighting nil ;; Symbol highlighting
-;       lsp-ui-doc-enable nil ;; lsp-ui-doc - on hover dialogs. * disable via
-;       lsp-ui-doc-show-with-cursor nil ;; disable cursor hover (keep mouse hover)
-;       lsp-ui-doc-show-with-mouse nil ;; disable mouse hover (keep cursor hover)
-;       lsp-lens-enable nil ;; Lenses
-;       lsp-headerline-breadcrumb-enable nil ;; Headerline
-;       lsp-ui-sideline-enable nil ;; Sideline code actions * disable whole sideline via
-;       lsp-ui-sideline-show-code-actions nil ;; * hide code actions
-;       lsp-ui-sideline-enable nil ;; Sideline hover symbols * disable whole sideline via
-;       lsp-ui-sideline-show-hover nil ;; * hide only hover symbols
-;       lsp-modeline-code-actions-enable nil ;; Modeline code actions
-;       lsp-diagnostics-provider :none ;; Flycheck (or flymake if no flycheck is present)
-;       lsp-ui-sideline-enable nil ;; Sideline diagnostics * disable whole sideline via
-;       lsp-ui-sideline-show-diagnostics nil ;; * hide only errors
-;       lsp-eldoc-enable-hover nil ;; Eldoc
-;       lsp-modeline-diagnostics-enable nil ;; Modeline diagnostics statistics
-;       lsp-signature-auto-activate nil ;; Signature help. You could manually request them via `lsp-signature-activate`
-;       lsp-signature-render-documentation nil ;; Signature help documentation (keep the signatures)
-;       lsp-completion-provider :none ;; Completion (company-mode)
-;       lsp-completion-show-detail nil ;; Completion item detail
-;       lsp-completion-show-kind nil ;; Completion item kind
+; (setq lsp-enable-symbol-highlighting nil
+;       lsp-ui-doc-enable nil
+;       lsp-ui-doc-show-with-cursor nil
+;       lsp-ui-doc-show-with-mouse nil
+;       lsp-lens-enable nil
+;       lsp-headerline-breadcrumb-enable nil
+;       lsp-ui-sideline-enable nil
+;       lsp-ui-sideline-show-code-actions nil
+;       lsp-ui-sideline-enable nil
+;       lsp-ui-sideline-show-hover nil
+;       lsp-modeline-code-actions-enable nil
+;       lsp-diagnostics-provider :none
+;       lsp-ui-sideline-enable nil
+;       lsp-ui-sideline-show-diagnostics nil
+;       lsp-eldoc-enable-hover nil
+;       lsp-modeline-diagnostics-enable nil
+;       lsp-signature-auto-activate nil
+;       lsp-signature-render-documentation nil
+;       lsp-completion-provider :none
+;       lsp-completion-show-detail nil
+;       lsp-completion-show-kind nil
 ; )
 )
+
+(use-package! tree-sitter
+  :defer t
+  :config
+  (global-tree-sitter-mode) ;; activate tree-sitter on any buffer containing code for which it has a parser available
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode) ;; you can easily see the difference tree-sitter-hl-mode makes for python, ts or tsx by switching on and off
+; (setq +tree-sitter-hl-enabled-modes '(python-mode go-mode)
+;       +tree-sitter-hl-enabled-modes '(not web-mode typescript-tsx-mode)
+;       +tree-sitter-hl-enabled-modes t)
+)
+
+(use-package tree-sitter-langs
+  :ensure t
+  :after tree-sitter)
+
+;(setq org-directory "~/org/")
+
+(setq org-link-file-path-type 'relative)
+(setq org-id-locations-file "~/doctor-dao/.org-id-locations" )
+(setq org-id-link-to-org-use-id 'use-existing)
+
+(use-package! org-tempo
+  :ensure nil
+  :demand t
+  :config
+  (dolist (item '(("sh"      . "src sh")
+                  ("el"      . "src emacs-lisp")
+                  ("li"      . "src lisp")
+                  ("sc"      . "src scheme")
+                  ("ts"      . "src typescript")
+                  ("py"      . "src python")
+                  ("yaml"    . "src yaml")
+                  ("json"    . "src json")
+                  ("einit"   . "src emacs-lisp :tangle emacs/init.el")
+                  ("emodule" . "src emacs-lisp :tangle emacs/modules/dw-MODULE.el")))
+    (add-to-list 'org-structure-template-alist item)))
+
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t))
+(defun dt/insert-auto-tangle-tag ()
+  "Insert auto-tangle tag in a literate config."
+  (interactive)
+  (evil-org-open-below 1)
+  (insert "#+auto_tangle: t ")
+  (evil-force-normal-state))
+(map! :leader
+      :desc "Insert auto_tangle tag" "i a" #'dt/insert-auto-tangle-tag)
 
 (use-package! lsp-pyright
   :ensure t
   :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
   :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
 
 (use-package! vimrc-mode
   :defer t
@@ -261,36 +310,34 @@ T - tag prefix
                   '(:npm :package "typescript"
                     :path "tsserver")))
 
-;(setq +tree-sitter-hl-enabled-modes '(python-mode go-mode))
-;(setq +tree-sitter-hl-enabled-modes '(not web-mode typescript-tsx-mode))
-(setq +tree-sitter-hl-enabled-modes t)
-
-(setq org-directory "~/org/")
-
-(setq org-link-file-path-type 'relative)
-
-(use-package! org-tempo
-  :ensure nil
-  :demand t
+(use-package! typescript-mode
+  :after tree-sitter
   :config
-  (dolist (item '(("sh" . "src sh")
-                  ("el" . "src emacs-lisp")
-                  ("li" . "src lisp")
-                  ("sc" . "src scheme")
-                  ("ts" . "src typescript")
-                  ("py" . "src python")
-                  ("yaml" . "src yaml")
-                  ("json" . "src json")
-                  ("einit" . "src emacs-lisp :tangle emacs/init.el")
-                  ("emodule" . "src emacs-lisp :tangle emacs/modules/dw-MODULE.el")))
-    (add-to-list 'org-structure-template-alist item)))
+  ;; we choose this instead of tsx-mode so that eglot can automatically figure out language for server
+  ;; see https://github.com/joaotavora/eglot/issues/624 and https://github.com/joaotavora/eglot#handling-quirky-servers
+  (define-derived-mode typescriptreact-mode typescript-mode
+    "TypeScript TSX")
+  ;; use our derived mode for tsx files
+  (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescriptreact-mode))
+  ;; by default, typescript-mode is mapped to the treesitter typescript parser
+  ;; use our derived mode to map both .tsx AND .ts -> typescriptreact-mode -> treesitter tsx
+  (add-to-list 'tree-sitter-major-mode-language-alist '(typescriptreact-mode . tsx)))
 
-;(setq! delete-by-moving-to-trash t
-;       trash-directory "~/mdata3912-trash")
 (setq! delete-by-moving-to-trash t
        trash-directory "/tmp")
 
-(setq! dired-listing-switches "-ahl -v")
+(defcustom list-of-dired-switches
+; '("-l" "-la" "-lA" "-lA --group-directories-first")
+; '("-lh" "-lha" "-lha --group-directories-first")
+  '("-lh" "-lha")
+  "List of ls switches for dired to cycle among.")
+(defun cycle-dired-switches ()
+  "Cycle through the list `list-of-dired-switches' of switches for ls"
+  (interactive)
+  (setq list-of-dired-switches
+        (append (cdr list-of-dired-switches)
+                (list (car list-of-dired-switches))))
+  (dired-sort-other (car list-of-dired-switches)))
 
 (after! dirvish
   (setq! dirvish-quick-access-entries
